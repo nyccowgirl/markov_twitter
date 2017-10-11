@@ -87,15 +87,8 @@ def make_text(chains, n_grams):
     while True:
         combo_list = chains[new_key]
         transition = choice(combo_list)
-        char_count = len(" ".join(words))
 
-        if char_count >= 140:
-            if char_count == 140:
-                break
-            else:
-                words.pop()
-                break
-        elif (transition is None):
+        if (transition is None):
             break
         elif (end_punc(transition) is True):
             words.append(transition)
@@ -135,17 +128,43 @@ def end_punc(transition):
         return False
 
 
-def tweet(chain):
-    """Tweet Markov output"""
+def check_limit(chains, n_grams):
+    """ Checks for 140 limit of Twitter based on complete chain. If not, rerun. """
 
     while True:
-        status = api.PostUpdate(chain)
-        print status.text
+        chain = make_text(chains, n_grams)
+        char_count = len(chain)
+
+        if char_count <= 140:
+            short_chain = chain
+            break
+        else:
+            chain = make_text(chains, n_grams)
+
+    return short_chain
+
+
+def tweet(short_chain, chains, n_grams):
+    """Tweet Markov output"""
+
+    duplicate = set([])
+
+    while True:
+        if short_chain in duplicate:
+            short_chain = check_limit(chains, n_grams)
+
+        #status = api.PostUpdate(short_chain)
+        #print status.text
+        print short_chain
+
+        duplicate.add(short_chain)
 
         user_input = raw_input("Enter to tweet again [q to quit] > ")
 
         if user_input == "q":
             break
+        else:
+            short_chain = check_limit(chains, n_grams)
 
 
 input_path = sys.argv[1:]
@@ -162,5 +181,8 @@ chains = make_chains(input_text, n_grams)
 # Produce random text
 random_text = make_text(chains, n_grams)
 
+# Adjust for Twitter limit
+twitter_text = check_limit(chains, n_grams)
+
 # Tweet random text
-tweet(random_text)
+tweet(twitter_text, chains, n_grams)
