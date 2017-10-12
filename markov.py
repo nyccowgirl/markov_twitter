@@ -168,7 +168,8 @@ def tweet(short_chain, chains, n_grams):
             short_chain = check_limit(chains, n_grams)
             count_duplicate += 1
 
-            if count_duplicate == 10:
+            if count_duplicate == 20:
+                print "There are no more unique Markov chains based on the Twitter character limits. Goodbye!"
                 break
 
 
