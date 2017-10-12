@@ -150,16 +150,16 @@ def tweet(short_chain, chains, n_grams):
     duplicate = set([])
 
     while True:
-        if short_chain in duplicate:
-            short_chain = check_limit(chains, n_grams)
+        if short_chain not in duplicate:
 
-        #status = api.PostUpdate(short_chain)
-        #print status.text
-        print short_chain
+            #status = api.PostUpdate(short_chain)
+            #print status.text
+            print short_chain
 
-        duplicate.add(short_chain)
+            duplicate.add(short_chain)
 
         user_input = raw_input("Enter to tweet again [q to quit] > ")
+        # think about coding on how it aborts if there are no more iterations of check_limit to then add.
 
         if user_input == "q":
             break
