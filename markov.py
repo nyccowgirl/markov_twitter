@@ -157,14 +157,19 @@ def tweet(short_chain, chains, n_grams):
             print short_chain
 
             duplicate.add(short_chain)
+            count_duplicate = 0
 
-        user_input = raw_input("Enter to tweet again [q to quit] > ")
-        # think about coding on how it aborts if there are no more iterations of check_limit to then add.
+            user_input = raw_input("Enter to tweet again [q to quit] > ")
 
-        if user_input == "q":
-            break
+            if user_input == "q":
+                break
         else:
+
             short_chain = check_limit(chains, n_grams)
+            count_duplicate += 1
+
+            if count_duplicate == 10:
+                break
 
 
 input_path = sys.argv[1:]
